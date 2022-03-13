@@ -1,0 +1,31 @@
+@use "../../abstracts/colors";
+
+$borderRadius: 25px;
+
+.card {
+    display: grid;
+    place-items: center;
+    height: 17.2rem;
+    width: 12.5rem;
+    border-radius: $borderRadius;
+
+    color: colors.$light;
+    background-color: colors.$light_opaque;
+    text-align: center;
+    
+    img {
+        width: 85%;
+        border-radius: $borderRadius;
+    }
+
+    .labelContainer {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        height: calc(100% - 25px);
+    }
+
+    transition: 0.2s;
+    &:hover {background-color: colors.$light_gray;}
+
+  }

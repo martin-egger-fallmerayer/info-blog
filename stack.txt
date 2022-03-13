@@ -1,0 +1,6 @@
+Backend:
+    - NextJS (Typescript)
+
+Styling:
+    - Sass
+    - CSS Modules

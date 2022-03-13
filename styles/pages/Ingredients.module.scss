@@ -1,0 +1,81 @@
+@use "../abstracts/fonts";
+@use "../abstracts/colors";
+
+.root {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  height: 100vh;
+}
+
+.sideBar {
+  height: 100%;
+  outline: 1px solid colors.$light_gray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0;
+
+  .socialMediaContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.mainContent {
+  height: calc(100vh - 8rem); // 8rem: header height
+  display: flex;
+  justify-content: center;
+
+  .resultContainer {
+    width: 75%;
+
+    .topLine {
+      display: flex;
+      gap: 2rem;
+
+      p {
+        color: colors.$light;
+        font-size: 2rem;
+        margin: 0;
+      }
+
+      .filterInput {
+        display: flex;
+        padding: 1rem;
+        border-bottom: 1px solid colors.$light_gray;
+        input {
+          width: 100%;
+          background-color: transparent;
+          outline: none;
+          border: none;
+          font-size: 1rem;
+          color: colors.$light;
+        }
+      }
+    }
+
+    .resultCardContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      margin-top: 4rem;
+      gap: 2rem;
+
+      height: 50rem;
+      overflow-y: scroll;
+
+      .card {
+        display: grid;
+        place-items: center;
+        height: 17.2rem;
+        width: 12.5rem;
+        border-radius: 25px;
+
+        background-color: colors.$light;
+        opacity: 10%;
+      }
+    }
+  }
+}

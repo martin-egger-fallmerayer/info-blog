@@ -1,0 +1,46 @@
+@use "../abstracts/colors";
+@use "../abstracts/fonts";
+
+.header {
+    height: 7rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8rem;
+  
+    nav {
+          height: 100%;
+          display: flex;
+          align-items: center;
+      ul {
+              height: 100%;
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-weight: 500;
+        color: colors.$light;
+  
+              li {
+                  margin: 0 1.75rem;
+                  display: flex;
+                  align-items: center;
+                  letter-spacing: 1px;
+              }
+  
+        li:hover {
+          cursor: pointer;
+          color: darken(colors.$primary, 10)
+        }
+  
+        // li:first-child {
+        //   color: colors.$primary;
+        //   font-weight: bold;
+        //   border-bottom: 2px solid colors.$primary;
+        // }
+
+        
+
+      }
+    }
+  }

@@ -1,0 +1,71 @@
+@use "../abstracts/fonts";
+@use "../abstracts/colors";
+
+.root {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  height: 100vh;
+}
+
+.sideBar {
+  height: 100%;
+  outline: 1px solid colors.$light_gray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0;
+
+  .socialMediaContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.mainContent {
+  height: calc(100vh - 8rem); // 8rem: header height
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+
+  .quoteContainer {
+    margin-top: 8rem;
+
+    .quote {
+      color: colors.$light;
+      font-family: fonts.$timesNewRoman;
+      font-size: 3.2rem;
+      padding-bottom: 2rem;
+      padding-left: 4rem;
+      border-bottom: 1px solid colors.$light_gray;
+      letter-spacing: 1px;
+    }
+    .searchBarContainer {
+      margin-left: 4rem;
+      margin-top: 8rem;
+      .searchBar {
+        display: flex;
+        padding: 1rem;
+        gap: 1rem;
+        border-bottom: 1px solid colors.$light_gray;
+        input {
+          width: 100%;
+          background-color: transparent;
+          outline: none;
+          border: none;
+          font-size: 2rem;
+          color: colors.$light;
+        }
+      }
+    }
+  }
+
+  .imageContainer {
+    display: flex;
+    align-items: flex-end;
+    img {
+      transform: translateY(1rem);
+    }
+  }
+}
