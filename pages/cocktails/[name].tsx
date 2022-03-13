@@ -10,6 +10,7 @@ import styles from "@styles/pages/Cocktail.module.scss";
 import Header from "components/Header";
 import { Cocktail } from "types/Cocktail";
 import { RecipeIngredient } from "types/RecipeIngredient";
+import { API_BASE } from "constants/api";
 
 type Props = {
   cocktail: Cocktail;
@@ -84,7 +85,7 @@ const Cocktail: NextPage<Props> = ({ cocktail }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch("http://localhost:8080/cocktails/names");
+  const res = await fetch(API_BASE + "/cocktails/names");
   const names = await res.json();
   const paths = names.map((name: string) => {
     return { params: { name: name.toLowerCase() } };
@@ -97,7 +98,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const res = await fetch(
-    "http://localhost:8080/cocktails/" + context.params?.name
+    API_BASE + "/cocktails/" + context.params?.name
   ); // ?: possibly undefined
   const cocktail = await res.json();
   return {

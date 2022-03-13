@@ -9,6 +9,7 @@ import WhatsappSvg from "@assets/whatsapp.svg";
 import styles from "@styles/pages/Ingredient.module.scss";
 import Header from "components/Header";
 import { Ingredient } from "types/Ingredient";
+import { API_BASE } from "constants/api";
 
 type Props = {
   ingredient: Ingredient;
@@ -58,7 +59,7 @@ const Ingredient: NextPage<Props> = ({ ingredient }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch("http://localhost:8080/ingredients/names");
+  const res = await fetch(API_BASE + "/ingredients/names");
   const names = await res.json();
   const paths = names.map((name: string) => {
     return { params: { name: name.toLowerCase() } };
@@ -71,7 +72,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const res = await fetch(
-    "http://localhost:8080/ingredients/" + context.params?.name
+    API_BASE + "/ingredients/" + context.params?.name
   ); // ?: possibly undefined
   const ingredient = await res.json();
   return {
