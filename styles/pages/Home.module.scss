@@ -57,6 +57,14 @@
           font-size: 2rem;
           color: colors.$light;
         }
+
+        select {
+          background-color: transparent;
+          color: colors.$light;
+          border: none;
+          outline: none;
+        }
+
       }
     }
   }
