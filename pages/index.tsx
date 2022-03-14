@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [searchType, setSearchType] = useState<string>("cocktails")
   
-  const handleKeyPress = (e: KeyboardEvent) => {
+  const handleKeyPress = (e: KeyboardEvent): void => {
     if(e.key !== "Enter") return
     if(searchTerm.includes("/")) return alert("Please enter only letters thx")
     e.preventDefault()

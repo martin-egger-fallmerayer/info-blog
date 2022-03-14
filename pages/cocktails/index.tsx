@@ -55,7 +55,7 @@ const Home: NextPage<Props> = ({ cocktails }) => {
   );
 };
 
-export async function getStaticProps() {
+export const getStaticProps = async () => {
   const res = await fetch("http://localhost:8080/cocktails");
   const cocktails = await res.json();
   return {
