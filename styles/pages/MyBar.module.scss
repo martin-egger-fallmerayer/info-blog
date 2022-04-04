@@ -1,0 +1,95 @@
+@use "../abstracts/fonts";
+@use "../abstracts/colors";
+
+.root {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  height: 100vh;
+}
+
+.sideBar {
+  height: 100%;
+  outline: 1px solid colors.$light_gray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0;
+
+  .socialMediaContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.mainContent {
+  height: calc(100vh - 8rem); // 8rem: header height
+  display: grid;
+  place-items: center;
+
+  .getStarted {
+    display: grid;
+    place-items: center;
+    gap: 3rem;
+
+    h1 {
+      color: colors.$light;
+      text-align: center;
+      font-size: 2.5rem;
+      margin: 0;
+    }
+
+    p {
+      color: colors.$light_gray;
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    input[type="button"] {
+      border-radius: 25px;
+      padding: 1rem;
+      width: 10rem;
+      color: colors.$light;
+      background-color: colors.$primary;
+      outline: none;
+      border: none;
+    }
+  }
+
+  .setup {
+    h1 {
+      text-transform: capitalize;
+      color: colors.$light;
+    }
+
+    h2 {
+      text-transform: capitalize;
+      color: colors.$light_gray;
+    }
+
+    .subcatIngredients {
+      display: flex;
+      gap: 3rem;
+
+      .pNotSelected {
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: colors.$light_gray;
+
+        &:hover {
+          color: colors.$primary_opaque;
+        }
+      }
+
+      .pSelected {
+        color: colors.$primary;
+      }
+
+      margin-bottom: 2rem;
+      margin-left: 2rem;
+    }
+  }
+}

@@ -1,31 +1,24 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
-import Image from "next/image";
-import BbSvg from "@assets/BB.svg";
-import InstagramSvg from "@assets/instagram.svg";
-import TwitterSvg from "@assets/twitter.svg";
-import WhatsappSvg from "@assets/whatsapp.svg";
+
 
 import styles from "@styles/pages/Ingredient.module.scss";
 import Header from "components/Header";
 import { Ingredient } from "types/Ingredient";
 import { API_BASE } from "constants/api";
+import Sidebar from "components/Sidebar";
 
 type Props = {
   ingredient: Ingredient;
 };
 
 const Ingredient: NextPage<Props> = ({ ingredient }) => {
+  
+  console.dir(ingredient)
+  
   return (
     <div className={styles.root}>
-      <aside className={styles.sideBar}>
-        <Image src={BbSvg} alt=""/>
-        <div className={styles.socialMediaContainer}>
-          <Image src={InstagramSvg} alt=""/>
-          <Image src={TwitterSvg} alt="" />
-          <Image src={WhatsappSvg} alt=""/>
-        </div>
-      </aside>
+      <Sidebar/>
 
       <main>
         <Header />
@@ -59,10 +52,10 @@ const Ingredient: NextPage<Props> = ({ ingredient }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch(API_BASE + "/ingredients/names");
-  const names = await res.json();
-  const paths = names.map((name: string) => {
-    return { params: { name: name.toLowerCase() } };
+  const res = await fetch(API_BASE + "/ingredients?ids");
+  const ids = await res.json();
+  const paths = ids.map((id: string) => {
+    return { params: { id } };
   });
   return {
     paths,
@@ -72,7 +65,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const res = await fetch(
-    API_BASE + "/ingredients/" + context.params?.name
+    API_BASE + "/ingredients/" + context.params?.id
   ); // ?: possibly undefined
   const ingredient = await res.json();
   return {

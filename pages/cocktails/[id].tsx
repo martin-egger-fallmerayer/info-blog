@@ -1,32 +1,27 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
-import Image from "next/image";
-import BbSvg from "@assets/BB.svg";
-import InstagramSvg from "@assets/instagram.svg";
-import TwitterSvg from "@assets/twitter.svg";
-import WhatsappSvg from "@assets/whatsapp.svg";
 
 import styles from "@styles/pages/Cocktail.module.scss";
 import Header from "components/Header";
 import { Cocktail } from "types/Cocktail";
 import { RecipeIngredient } from "types/RecipeIngredient";
-import { API_BASE } from "constants/api";
+import { getAllCocktailsIds } from "@pages/api/cocktails";
+import { getCocktailById } from "@pages/api/cocktails/[id]";
+import { ParsedUrlQuery } from "querystring";
+import Sidebar from "components/Sidebar";
 
 type Props = {
   cocktail: Cocktail;
 };
 
+type Context = {
+  params: [ParsedUrlQuery | undefined];
+};
+
 const Cocktail: NextPage<Props> = ({ cocktail }) => {
   return (
     <div className={styles.root}>
-      <aside className={styles.sideBar}>
-        <Image src={BbSvg} alt="" />
-        <div className={styles.socialMediaContainer}>
-          <Image src={InstagramSvg} alt="" />
-          <Image src={TwitterSvg} alt=""/>
-          <Image src={WhatsappSvg} alt=""/>
-        </div>
-      </aside>
+     <Sidebar />
 
       <main>
         <Header />
@@ -34,7 +29,7 @@ const Cocktail: NextPage<Props> = ({ cocktail }) => {
           <div className={styles.left}>
             {/* Title */}
             <div className={styles.titleContainer}>
-              <h1>{cocktail.name}</h1>
+              <h1>{cocktail._id}</h1>
               <h2>{cocktail.type}</h2>
             </div>
 
@@ -75,7 +70,7 @@ const Cocktail: NextPage<Props> = ({ cocktail }) => {
             )}
           </div>
           <div className={styles.right}>
-            <img src={cocktail.img} alt={cocktail.name} />
+            <img src={cocktail.img} alt={cocktail._id} />
             <p>{cocktail.tags.join(", ")}</p>
           </div>
         </div>
@@ -85,10 +80,9 @@ const Cocktail: NextPage<Props> = ({ cocktail }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch(API_BASE + "/cocktails/names");
-  const names = await res.json();
-  const paths = names.map((name: string) => {
-    return { params: { name: name.toLowerCase() } };
+  const ids = await getAllCocktailsIds();
+  const paths = ids.map((id: string) => {
+    return { params: { id: id.toLowerCase() } };
   });
   return {
     paths,
@@ -97,10 +91,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const res = await fetch(
-    API_BASE + "/cocktails/" + context.params?.name
-  ); // ?: possibly undefined
-  const cocktail = await res.json();
+  const id = String(context.params?.id);
+  const cocktail = await getCocktailById(id);
   return {
     props: {
       cocktail,

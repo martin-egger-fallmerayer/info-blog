@@ -1,32 +1,40 @@
 import type { NextPage } from "next";
 
-import Image from "next/image";
-import BbSvg from "@assets/BB.svg";
-import InstagramSvg from "@assets/instagram.svg";
-import TwitterSvg from "@assets/twitter.svg";
-import WhatsappSvg from "@assets/whatsapp.svg";
+
 
 import styles from "@styles/pages/Cocktails.module.scss";
 import Header from "components/Header";
 import { Cocktail } from "types/Cocktail";
 import SmallResultCard from "components/cards/SmallResultCard";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { getAllCocktails, searchCocktailsById } from "@pages/api/cocktails";
+import Sidebar from "components/Sidebar";
 
 type Props = {
   cocktails: Array<Cocktail>;
 };
 
-const Home: NextPage<Props> = ({ cocktails }) => {
+type Context = {
+  query: { search: string };
+};
+
+const Cocktails: NextPage<Props> = ({ cocktails }) => {
+  const router = useRouter();
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (key: string) => {
+    if (key === "Enter") {
+      router.replace("/cocktails?search=" + searchTerm);
+      router.reload();
+    }
+  };
+
   return (
     <div className={styles.root}>
-      <aside className={styles.sideBar}>
-        <Image src={BbSvg} alt=""/>
-        <div className={styles.socialMediaContainer}>
-          <Image src={InstagramSvg} alt=""/>
-          <Image src={TwitterSvg} alt=""/>
-          <Image src={WhatsappSvg} alt=""/>
-        </div>
-      </aside>
+      <Sidebar/>
 
       <main>
         <Header />
@@ -36,14 +44,23 @@ const Home: NextPage<Props> = ({ cocktails }) => {
             <div className={styles.topLine}>
               <p>{cocktails.length} results</p>
               <div className={styles.filterInput}>
-                <input type="text" placeholder="Filter by name..." />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => handleSearch(e.key)}
+                />
               </div>
             </div>
             <div className={styles.resultCardContainer}>
               {cocktails.map((cocktail) => (
-                <Link href={"/cocktails/" + cocktail.name.toLowerCase()} key={cocktail.name}>
+                <Link
+                  href={"/cocktails/" + cocktail._id.toLowerCase()}
+                  key={cocktail._id}
+                >
                   <a>
-                    <SmallResultCard label={cocktail.name} img={cocktail.img} />
+                    <SmallResultCard label={cocktail._id} img={cocktail.img} />
                   </a>
                 </Link>
               ))}
@@ -55,9 +72,13 @@ const Home: NextPage<Props> = ({ cocktails }) => {
   );
 };
 
-export async function getStaticProps() {
-  const res = await fetch("http://localhost:8080/cocktails");
-  const cocktails = await res.json();
+export async function getServerSideProps(context: Context) {
+  const { search } = context.query;
+  const cocktails =
+    search === undefined
+      ? await getAllCocktails()
+      : await searchCocktailsById(search);
+
   return {
     props: {
       cocktails,
@@ -65,4 +86,4 @@ export async function getStaticProps() {
   };
 }
 
-export default Home;
+export default Cocktails;

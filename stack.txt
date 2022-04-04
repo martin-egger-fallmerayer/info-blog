@@ -1,5 +1,9 @@
 Backend:
     - NextJS (Typescript)
+    - PostgreSQL
+    - MongoDB
+    - Prisma (DB-ORM)
+    - mongodb (mongodb client)
 
 Styling:
     - Sass

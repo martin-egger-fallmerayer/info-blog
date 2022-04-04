@@ -1,25 +1,15 @@
 import type { NextPage } from "next";
 
-import Image from "next/image";
-import BbSvg from "@assets/BB.svg";
-import InstagramSvg from "@assets/instagram.svg";
-import TwitterSvg from "@assets/twitter.svg";
-import WhatsappSvg from "@assets/whatsapp.svg";
+
 
 import styles from "@styles/pages/Diy.module.scss";
 import Header from "components/Header";
+import Sidebar from "components/Sidebar";
 
-const Home: NextPage = () => {
+const Diy: NextPage = () => {
   return (
     <div className={styles.root}>
-      <aside className={styles.sideBar}>
-        <Image src={BbSvg} alt="" />
-        <div className={styles.socialMediaContainer}>
-          <Image src={InstagramSvg} alt=""/>
-          <Image src={TwitterSvg} alt=""/>
-          <Image src={WhatsappSvg} alt=""/>
-        </div>
-      </aside>
+      <Sidebar />
 
       <main>
         <Header/>

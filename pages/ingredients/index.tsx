@@ -1,32 +1,35 @@
 import type { NextPage } from "next";
 
-import Image from "next/image";
-import BbSvg from "@assets/BB.svg";
-import InstagramSvg from "@assets/instagram.svg";
-import TwitterSvg from "@assets/twitter.svg";
-import WhatsappSvg from "@assets/whatsapp.svg";
 
 import styles from "@styles/pages/Ingredients.module.scss";
 import Header from "components/Header";
 import { Ingredient } from "types/Ingredient";
 import SmallResultCard from "components/cards/SmallResultCard";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import Sidebar from "components/Sidebar";
 
 type Props = {
   ingredients: Array<Ingredient>;
 };
 
 const Ingredients: NextPage<Props> = ({ ingredients }) => {
+  const router = useRouter();
+
+  const [filterTerm, setFilterTerm] = useState<string>(
+    router.query.filter || ""
+  );
+
+  const filter = () => {
+    return ingredients.filter((ingredient) => {
+      return ingredient.name.toLowerCase().includes(filterTerm);
+    });
+  };
+
   return (
     <div className={styles.root}>
-      <aside className={styles.sideBar}>
-        <Image src={BbSvg} alt=""/>
-        <div className={styles.socialMediaContainer}>
-          <Image src={InstagramSvg} alt=""/>
-          <Image src={TwitterSvg} alt=""/>
-          <Image src={WhatsappSvg} alt=""/>
-        </div>
-      </aside>
+      <Sidebar/>
 
       <main>
         <Header />
@@ -36,12 +39,20 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
             <div className={styles.topLine}>
               <p>[n] results</p>
               <div className={styles.filterInput}>
-                <input type="text" placeholder="Filter by name..." />
+                <input
+                  type="text"
+                  placeholder="Filter by name..."
+                  value={filterTerm}
+                  onChange={(e) => setFilterTerm(e.target.value.toLowerCase())}
+                />
               </div>
             </div>
             <div className={styles.resultCardContainer}>
-              {ingredients.map((ingredient) => (
-                <Link href={"/ingredients/" + ingredient.name.toLowerCase()} key={ingredient.name}>
+              {filter().map((ingredient) => (
+                <Link
+                  href={"/ingredients/" + ingredient.id}
+                  key={ingredient.name}
+                >
                   <a>
                     <SmallResultCard
                       label={ingredient.name}
@@ -59,7 +70,7 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
 };
 
 export async function getStaticProps() {
-  const res = await fetch("http://localhost:8080/ingredients");
+  const res = await fetch("http://localhost:4000/ingredients");
   const ingredients = await res.json();
   return {
     props: {
