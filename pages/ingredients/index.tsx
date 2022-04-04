@@ -69,8 +69,8 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
   );
 };
 
-export async function getStaticProps() {
-  const res = await fetch("http://localhost:4000/ingredients");
+export const getStaticProps = async () => {
+  const res = await fetch("http://localhost:8080/ingredients");
   const ingredients = await res.json();
   return {
     props: {
