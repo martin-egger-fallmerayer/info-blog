@@ -4,7 +4,6 @@ import type { NextPage } from "next";
 
 import styles from "@styles/pages/Cocktails.module.scss";
 import Header from "components/Header";
-import { Cocktail } from "types/Cocktail";
 import SmallResultCard from "components/cards/SmallResultCard";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,7 +12,7 @@ import { getAllCocktails, searchCocktailsById } from "@pages/api/cocktails";
 import Sidebar from "components/Sidebar";
 
 type Props = {
-  cocktails: Array<Cocktail>;
+  cocktails: any[];
 };
 
 type Context = {

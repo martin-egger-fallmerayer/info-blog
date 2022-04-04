@@ -14,7 +14,7 @@ export default async function handler(
 }
 
 export const getCocktailById = async (id: string) => {
-  const cocktail: Data = await mongo.cocktails.findOne({
+  const cocktail: any = await mongo.cocktails.findOne({
     _id: { $regex: new RegExp("^" + String(id).toLowerCase(), "i") },
   });
   return cocktail;

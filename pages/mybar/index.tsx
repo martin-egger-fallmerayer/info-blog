@@ -5,46 +5,68 @@ import Header from "components/Header";
 import { checkCookies, getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Cocktail } from "../../types/Cocktail";
 import Sidebar from "components/Sidebar";
+import { getCocktailsByIngredients } from "@pages/api/cocktails/byIngredients";
+import Link from "next/link";
+import SmallResultCard from "components/cards/SmallResultCard";
 
-const MyBar: NextPage = () => {
+type Props = {
+  myCocktails: any[];
+};
+
+const MyBar: NextPage<Props> = ({ myCocktails }) => {
   const router = useRouter();
 
-  const [myCocktails, setMyCocktails] = useState<Cocktail[]>([])
-
   useEffect(() => {
-    const getMyCocktails = async (myIngredients: any) => {
-      const res = await fetch("http://localhost:4000/cocktails/byingredients", {
-        method: "POST",
-        body: myIngredients,
-      });
-      const myCocktails = await res.json();
-      console.log(myCocktails)
-      setMyCocktails(myCocktails)
-    };
-
     if (!checkCookies("mybar-ingredients")) {
       router.push("/mybar/getstarted");
-    } else {
-      const myIngredients = JSON.parse(getCookie("mybar-ingredients"));
-      getMyCocktails(myIngredients)
     }
   }, []);
 
   return (
     <div className={styles.root}>
-      <Sidebar/>
+      <Sidebar />
 
       <main>
         <Header />
 
         <div className={styles.mainContent}>
-          { myCocktails.map((cocktail: Cocktail) => <p>{cocktail._id}</p>) }
+          <div className={styles.resultContainer}>
+            <div className={styles.topLine}>
+              <p>{myCocktails.length} results</p>
+              <div className={styles.buttonContainer}>
+                <input className={styles.secondary} type="button" value="CLEAR" onClick={() => router.push("/mybar/setup")} />
+                <input className={styles.primary} type="button" value="UPDATE" onClick={() => router.push("/mybar/setup")} />
+              </div>
+            </div>
+            <div className={styles.resultCardContainer}>
+              {myCocktails.map((cocktail) => (
+                <Link
+                  href={"/cocktails/" + cocktail._id.toLowerCase()}
+                  key={cocktail._id}
+                >
+                  <a>
+                    <SmallResultCard label={cocktail._id} img={cocktail.img} />
+                  </a>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
     </div>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const myIngredients = ("mybar-ingredients" in context.req.cookies) ? JSON.parse(context.req.cookies["mybar-ingredients"]) : [];
+
+  const myCocktails = await getCocktailsByIngredients(myIngredients);
+  return {
+    props: {
+      myCocktails,
+    },
+  };
+}
 
 export default MyBar;

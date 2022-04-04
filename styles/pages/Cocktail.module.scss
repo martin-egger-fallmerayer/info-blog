@@ -7,23 +7,6 @@
   height: 100vh;
 }
 
-.sideBar {
-  height: 100%;
-  outline: 1px solid colors.$light_gray;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2rem 0;
-
-  .socialMediaContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3rem;
-  }
-}
-
 .mainContent {
   height: calc(100vh - 8rem); // 8rem: header height
   display: grid;

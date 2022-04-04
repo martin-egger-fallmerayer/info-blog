@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Ingredient } from "types/Ingredient";
+import { Ingredient } from "@prisma/client"
 import mongo from "db/mongo";
 import { FindCursor } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -13,15 +13,20 @@ export default async function handler(
   // Guard
   if (req.method !== "POST") res.status(504).send("Method not allowed");
 
-  const ingredients = req.body;
   console.dir(req.body);
+
+  res.json(await getCocktailsByIngredients(req.body));
+}
+
+export const getCocktailsByIngredients = async (ingredients: string[]) => {
   const cocktails: FindCursor = mongo.cocktails.find({});
   const cocktailsArray = await cocktails.toArray();
-  const myCocktails = cocktailsArray.filter((cocktail) => {
-    return cocktail.ingredients.every((ingredient: Ingredient) =>
-      ingredients.includes(ingredient)
-    );
-  });
-  console.dir(myCocktails);
-  res.json(myCocktails);
-}
+
+  const myCocktails = cocktailsArray.filter(cocktail => {
+    return cocktail.ingredients.every((ingredient:any) => {
+      return ingredients.includes(ingredient.name)
+    })
+  })
+  return myCocktails
+};
+

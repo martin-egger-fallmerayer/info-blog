@@ -3,15 +3,13 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
 import styles from "@styles/pages/Cocktail.module.scss";
 import Header from "components/Header";
-import { Cocktail } from "types/Cocktail";
-import { RecipeIngredient } from "types/RecipeIngredient";
 import { getAllCocktailsIds } from "@pages/api/cocktails";
 import { getCocktailById } from "@pages/api/cocktails/[id]";
 import { ParsedUrlQuery } from "querystring";
 import Sidebar from "components/Sidebar";
 
 type Props = {
-  cocktail: Cocktail;
+  cocktail: any;
 };
 
 type Context = {
@@ -35,7 +33,7 @@ const Cocktail: NextPage<Props> = ({ cocktail }) => {
 
             {/* Recipe + Garnish */}
             <div className={styles.recipeContainer}>
-              {cocktail.ingredients.map((ingredient: RecipeIngredient) => (
+              {cocktail.ingredients.map((ingredient: any) => (
                 <div className={styles.recipeLine} key={ingredient.name}>
                   {/* Conditional measurement */}
                   {ingredient.measurement !== 0 && (

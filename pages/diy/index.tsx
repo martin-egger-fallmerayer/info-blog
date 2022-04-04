@@ -43,4 +43,4 @@ const Diy: NextPage = () => {
   );
 };
 
-export default Home;
+export default Diy;

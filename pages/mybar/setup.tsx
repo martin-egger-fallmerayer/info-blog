@@ -2,44 +2,54 @@ import type { NextPage } from "next";
 
 import styles from "@styles/pages/MyBar.module.scss";
 import Header from "components/Header";
-import { Category } from "../../types/Category";
+import { Category } from "@prisma/client";
 import { setCookies } from "cookies-next";
-import { useEffect, useState } from "react";
-import { Ingredient } from "../../types/Ingredient";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Sidebar from "components/Sidebar";
+import { getAllCategoriesWithIngredients } from "@pages/api/categories";
 
 type Props = {
   categories: Category[];
+  myIngredientsFromCookie: string[];
 };
 
-const Setup: NextPage<Props> = ({ categories }) => {
+const Setup: NextPage<Props> = ({ categories, myIngredientsFromCookie }) => {
   const router = useRouter();
 
-  const [myIngredients, setMyIngredients] = useState<string[]>([]);
+  const [myIngredients, setMyIngredients] = useState<string[]>(
+    myIngredientsFromCookie
+  );
 
-  const handleMybar = (ingredientId: string, target: EventTarget) => {
+  const initMyBar = (ingredientName: string, target: EventTarget) => {
+    if (myIngredients.includes(ingredientName)) {
+      (target as any).classList.replace(styles.pSelected, styles.pNotSelected);
+    } else {
+      (target as any).classList.replace(styles.pNotSelected, styles.pSelected);
+    }
+  };
+
+  const handleMybar = (ingredientName: string, target: EventTarget) => {
     // Remove
-    if (myIngredients.includes(ingredientId)) {
+    if (myIngredients.includes(ingredientName)) {
       setMyIngredients(
-        myIngredients.filter((currentId) => currentId != ingredientId)
+        myIngredients.filter((currentId) => currentId != ingredientName)
       );
-      target.classList.replace(styles.pSelected, styles.pNotSelected);
+      // @ts-nocheck
+      (target as any).classList.replace(styles.pSelected, styles.pNotSelected);
     }
 
     // Add
     else {
-      setMyIngredients([...myIngredients, ingredientId]);
-      target.classList.replace(styles.pNotSelected, styles.pSelected);
+      setMyIngredients([...myIngredients, ingredientName]);
+
+      (target as any).classList.replace(styles.pNotSelected, styles.pSelected);
     }
-
-    console.log(myIngredients);
   };
-
-  const handleManyIngredients = (ingredients: Ingredient[]) => {};
 
   const saveBar = () => {
     setCookies("mybar-ingredients", myIngredients);
+
     router.push("/mybar");
   };
 
@@ -61,7 +71,7 @@ const Setup: NextPage<Props> = ({ categories }) => {
                 <h1>{category.namePlural}</h1>
                 <h2>
                   {/* Subcategories */}
-                  {category.subcategories.map((subcat) => (
+                  {(category as any).Subcategory.map((subcat: any) => (
                     <div key={subcat.name}>
                       <label htmlFor="">
                         <input type="checkbox" value={subcat.name} />
@@ -69,12 +79,16 @@ const Setup: NextPage<Props> = ({ categories }) => {
                       </label>
                       <div className={styles.subcatIngredients}>
                         {/* Ingredients */}
-                        {subcat.ingredients.map((ingredient) => (
+                        {subcat.Ingredient.map((ingredient: any) => (
                           <p
-                            className={styles.pNotSelected}
+                            className={
+                              myIngredients.includes(ingredient.name)
+                                ? styles.pSelected
+                                : styles.pNotSelected
+                            }
                             key={ingredient.id}
                             onClick={(e) =>
-                              handleMybar(ingredient.id, e.target)
+                              handleMybar(ingredient.name, e.target)
                             }
                           >
                             {ingredient.name}
@@ -93,12 +107,17 @@ const Setup: NextPage<Props> = ({ categories }) => {
   );
 };
 
-export async function getStaticProps() {
-  const res = await fetch("http://localhost:4000/categories?withIngredients");
-  const categories = await res.json();
+export async function getServerSideProps({ req, res }: { req: any; res: any }) {
+  let myIngredientsFromCookie =
+    req.cookies["mybar-ingredients"] === undefined
+      ? []
+      : JSON.parse(req.cookies["mybar-ingredients"]);
+
+  const categories = await getAllCategoriesWithIngredients();
   return {
     props: {
       categories,
+      myIngredientsFromCookie,
     },
   };
 }

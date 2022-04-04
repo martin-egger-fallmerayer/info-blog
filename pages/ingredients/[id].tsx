@@ -4,9 +4,10 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
 import styles from "@styles/pages/Ingredient.module.scss";
 import Header from "components/Header";
-import { Ingredient } from "types/Ingredient";
-import { API_BASE } from "constants/api";
 import Sidebar from "components/Sidebar";
+import { getIngredientById } from "@pages/api/ingredients/[id]";
+import { getAllIngredientIds } from "@pages/api/ingredients";
+import { Ingredient } from '@prisma/client'
 
 type Props = {
   ingredient: Ingredient;
@@ -28,7 +29,7 @@ const Ingredient: NextPage<Props> = ({ ingredient }) => {
             <div className={styles.titleContainer}>
               <h1>{ingredient.name}</h1>
               <h2>
-                {ingredient.category} • {ingredient.subcategory}
+                {ingredient.categoryName} • {ingredient.subcategoryName}
               </h2>
             </div>
 
@@ -52,8 +53,7 @@ const Ingredient: NextPage<Props> = ({ ingredient }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch(API_BASE + "/ingredients?ids");
-  const ids = await res.json();
+  const ids = await getAllIngredientIds()
   const paths = ids.map((id: string) => {
     return { params: { id } };
   });
@@ -63,11 +63,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
+
 export const getStaticProps: GetStaticProps = async (context) => {
-  const res = await fetch(
-    API_BASE + "/ingredients/" + context.params?.id
-  ); // ?: possibly undefined
-  const ingredient = await res.json();
+  const id = String(context.params?.id);
+  const ingredient = await getIngredientById(id)
   return {
     props: {
       ingredient,

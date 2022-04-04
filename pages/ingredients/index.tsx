@@ -3,12 +3,13 @@ import type { NextPage } from "next";
 
 import styles from "@styles/pages/Ingredients.module.scss";
 import Header from "components/Header";
-import { Ingredient } from "types/Ingredient";
+import { Ingredient } from "@prisma/client";
 import SmallResultCard from "components/cards/SmallResultCard";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Sidebar from "components/Sidebar";
+import { getAllIngredients } from "@pages/api/ingredients";
 
 type Props = {
   ingredients: Array<Ingredient>;
@@ -18,7 +19,7 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
   const router = useRouter();
 
   const [filterTerm, setFilterTerm] = useState<string>(
-    router.query.filter || ""
+    String(router.query.filter) || ""
   );
 
   const filter = () => {
@@ -70,8 +71,7 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
 };
 
 export const getStaticProps = async () => {
-  const res = await fetch("http://localhost:8080/ingredients");
-  const ingredients = await res.json();
+  const ingredients = await getAllIngredients()
   return {
     props: {
       ingredients,
