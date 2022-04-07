@@ -1,6 +1,13 @@
 @use "../abstracts/fonts";
 @use "../abstracts/colors";
 
+.sorry {
+  color: colors.$light;
+  text-align: center;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
 .root {
   display: grid;
   grid-template-columns: 8rem 1fr;

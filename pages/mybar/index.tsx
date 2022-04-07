@@ -2,9 +2,9 @@ import type { NextPage } from "next";
 
 import styles from "@styles/pages/MyBar.module.scss";
 import Header from "components/Header";
-import { checkCookies, getCookie } from "cookies-next";
+import { checkCookies } from "cookies-next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Sidebar from "components/Sidebar";
 import { getCocktailsByIngredients } from "@pages/api/cocktails/byIngredients";
 import Link from "next/link";
@@ -35,21 +35,42 @@ const MyBar: NextPage<Props> = ({ myCocktails }) => {
             <div className={styles.topLine}>
               <p>{myCocktails.length} results</p>
               <div className={styles.buttonContainer}>
-                <input className={styles.secondary} type="button" value="CLEAR" onClick={() => router.push("/mybar/setup")} />
-                <input className={styles.primary} type="button" value="UPDATE" onClick={() => router.push("/mybar/setup")} />
+                <input
+                  className={styles.secondary}
+                  type="button"
+                  value="CLEAR"
+                  onClick={() => router.push("/mybar/setup")}
+                />
+                <input
+                  className={styles.primary}
+                  type="button"
+                  value="UPDATE"
+                  onClick={() => router.push("/mybar/setup")}
+                />
               </div>
             </div>
+
             <div className={styles.resultCardContainer}>
-              {myCocktails.map((cocktail) => (
-                <Link
-                  href={"/cocktails/" + cocktail._id.toLowerCase()}
-                  key={cocktail._id}
-                >
-                  <a>
-                    <SmallResultCard label={cocktail._id} img={cocktail.img} />
-                  </a>
-                </Link>
-              ))}
+              {myCocktails.length === 0 && (
+                <h1 className={styles.sorry}>
+                  Sorry, we couldn't find any cocktails for you :(
+                </h1>
+              )}
+
+              {myCocktails.length !== 0 &&
+                myCocktails.map((cocktail) => (
+                  <Link
+                    href={"/cocktails/" + cocktail._id.toLowerCase()}
+                    key={cocktail._id}
+                  >
+                    <a>
+                      <SmallResultCard
+                        label={cocktail._id}
+                        img={cocktail.img}
+                      />
+                    </a>
+                  </Link>
+                ))}
             </div>
           </div>
         </div>
@@ -59,7 +80,10 @@ const MyBar: NextPage<Props> = ({ myCocktails }) => {
 };
 
 export async function getServerSideProps(context: any) {
-  const myIngredients = ("mybar-ingredients" in context.req.cookies) ? JSON.parse(context.req.cookies["mybar-ingredients"]) : [];
+  const myIngredients =
+    "mybar-ingredients" in context.req.cookies
+      ? JSON.parse(context.req.cookies["mybar-ingredients"])
+      : [];
 
   const myCocktails = await getCocktailsByIngredients(myIngredients);
   return {
