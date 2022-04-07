@@ -24,7 +24,7 @@ const Home: NextPage = () => {
     if (key !== "Enter") return;
     router.push({
       pathname: searchType,
-      query: { filter: searchTerm },
+      query: { search: searchTerm },
     });
   };
 
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
                 <select onChange={(e) => setSearchType(e.target.value)}>
                   <option value="cocktails">Cocktails</option>
                   <option value="ingredients">Ingredients</option>
-                  <option value="diy">DIY</option>
+                  {/* <option value="diy">DIY</option> */}
                 </select>
               </div>
             </div>

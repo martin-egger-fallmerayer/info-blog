@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 
-const uri = `mongodb://mongo:mongo@localhost:27017/?authSource=bsuff-db&readPreference=primary&ssl=false`;
+const uri = `mongodb://mongo:mongo@192.168.1.167:27017/?authSource=bsuff-db&readPreference=primary&ssl=false`;
 
 const mongoClient = new MongoClient(uri);
 

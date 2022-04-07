@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 
-
 import styles from "@styles/pages/Ingredients.module.scss";
 import Header from "components/Header";
 import { Ingredient } from "@prisma/client";
@@ -9,18 +8,23 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Sidebar from "components/Sidebar";
-import { getAllIngredients } from "@pages/api/ingredients";
+import {
+  getAllIngredients,
+  searchIngredientsById,
+} from "@pages/api/ingredients";
 
 type Props = {
   ingredients: Array<Ingredient>;
 };
 
+type Context = {
+  query: { search: string };
+};
+
 const Ingredients: NextPage<Props> = ({ ingredients }) => {
   const router = useRouter();
 
-  const [filterTerm, setFilterTerm] = useState<string>(
-    String(router.query.filter) || ""
-  );
+  const [filterTerm, setFilterTerm] = useState<string>("");
 
   const filter = () => {
     return ingredients.filter((ingredient) => {
@@ -30,7 +34,7 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
 
   return (
     <div className={styles.root}>
-      <Sidebar/>
+      <Sidebar />
 
       <main>
         <Header />
@@ -42,7 +46,7 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
               <div className={styles.filterInput}>
                 <input
                   type="text"
-                  placeholder="Filter by name..."
+                  placeholder="Search..."
                   value={filterTerm}
                   onChange={(e) => setFilterTerm(e.target.value.toLowerCase())}
                 />
@@ -70,13 +74,17 @@ const Ingredients: NextPage<Props> = ({ ingredients }) => {
   );
 };
 
-export const getStaticProps = async () => {
-  const ingredients = await getAllIngredients()
+export const getServerSideProps = async (context: Context) => {
+  const { search } = context.query;
+  const ingredients =
+    search === undefined
+      ? await getAllIngredients()
+      : await searchIngredientsById(search);
   return {
     props: {
       ingredients,
     },
   };
-}
+};
 
 export default Ingredients;

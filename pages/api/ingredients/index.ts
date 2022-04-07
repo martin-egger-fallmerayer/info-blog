@@ -9,7 +9,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   // names
   if ("ids" in req.query) {
     res.json(await getAllIngredientIds());
-    res.json(await getAllIngredientIds());
   }
 
   // ingredients
@@ -28,4 +27,16 @@ export const getAllIngredientIds = async () => {
     select: { id: true },
   });
   return names.map((name) => name.id);
+};
+
+export const searchIngredientsById = async (search: string) => {
+  const searchIngredients = await prisma.ingredient.findMany({
+    where: {
+      id: {
+        contains: search.toLowerCase(),
+      },
+    },
+  });
+
+  return searchIngredients;
 };

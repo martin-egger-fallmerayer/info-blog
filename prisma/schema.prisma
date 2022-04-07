@@ -8,14 +8,14 @@ datasource db {
 }
 
 model Category {
-  name        String        @id @unique
+  name        String        @id
   namePlural  String
   Category  Ingredient[]
   Subcategory Subcategory[]
 }
 
 model DiyArticle {
-  id    String @id @unique
+  id    String @id
   title String
   intro String
   body  String
@@ -23,7 +23,7 @@ model DiyArticle {
 }
 
 model Ingredient {
-  id              String      @id @unique
+  id              String      @id
   name            String
   description     String
   alcoholic       Boolean
@@ -36,7 +36,7 @@ model Ingredient {
 }
 
 model Subcategory {
-  name         String       @id @unique
+  name         String       @id
   categoryName String
   Category     Category     @relation(fields: [categoryName], references: [name])
   Ingredient   Ingredient[]

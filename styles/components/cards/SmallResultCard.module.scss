@@ -3,8 +3,7 @@
 $borderRadius: 25px;
 
 .card {
-    display: grid;
-    place-items: center;
+    
     height: 17.2rem;
     width: 12.5rem;
     border-radius: $borderRadius;
@@ -12,17 +11,19 @@ $borderRadius: 25px;
     color: colors.$light;
     background-color: colors.$light_opaque;
     text-align: center;
-    
+
     img {
-        width: 85%;
+        position: relative;
+        top: 1em;
+        width: 10em;
+        height: 10em;
         border-radius: $borderRadius;
+        object-fit: contain;
     }
 
     .labelContainer {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        height: calc(100% - 25px);
+        position: relative;
+        bottom: -3em;
     }
 
     transition: 0.2s;
