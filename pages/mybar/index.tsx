@@ -53,7 +53,7 @@ const MyBar: NextPage<Props> = ({ myCocktails }) => {
             <div className={styles.resultCardContainer}>
               {myCocktails.length === 0 && (
                 <h1 className={styles.sorry}>
-                  Sorry, we couldn't find any cocktails for you :(
+                  Sorry, we couldn&apos;t find any cocktails for you :(
                 </h1>
               )}
 

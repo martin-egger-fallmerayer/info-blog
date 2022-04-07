@@ -10,6 +10,7 @@ const Sidebar = () => {
   return (
     <aside className={styles.sideBar}>
       <Image src={BbSvg} alt="" />
+
       <div className={styles.socialMediaContainer}>
         <Image src={InstagramSvg} alt="" />
         <Image src={TwitterSvg} alt="" />
